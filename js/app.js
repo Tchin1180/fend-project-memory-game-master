@@ -1,8 +1,26 @@
 /*
  * Create a list that holds all of your cards
  */
-let card = document.getElementsByClassName("cards");
-let cards = [...card];
+
+let cards = ['fa-diamond', 'fa-diamond', 'fa-paper-plane-o', 'fa-paper-plane-o', 'fa-anchor', 'fa-anchor', 'fa-bolt', 'fa-bolt', 'fa-cube','fa-cube', 'fa-leaf', 'fa-leaf', 'fa-bicycle', 'fa-bicycle', 'fa-bomb', 'fa-bomb']
+
+
+/*
+const card = document.querySelectorAll('.card'); //grab all the card elements
+let cards = [...card]; //put these cards in an array
+cards.forEach(function(card){
+  card.addEventListener('click', function() {
+    card.classList.toggle('open');
+    card.classList.toggle('show');//add class to any card clicked
+  });
+});
+*/
+
+/*for (var i=0; i<cards.length; i++) {
+  card.addEventListener('click', function() {
+    cards.classList.toggle('open', 'show'); //add class to any card clicked
+});
+} //loop through array to add an event listner and run function of displayCard
 
 /*
  * Display the cards on the page
@@ -11,6 +29,9 @@ let cards = [...card];
  *   - add each card's HTML to the page
  */
 
+let displayCard = function() {
+
+}
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
