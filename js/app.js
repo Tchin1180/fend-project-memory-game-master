@@ -1,8 +1,30 @@
 /*
  * Create a list that holds all of your cards
  */
+const cards = ['fa-diamond', 'fa-diamond', 'fa-paper-plane-o', 'fa-paper-plane-o', 'fa-anchor', 'fa-anchor', 'fa-bolt', 'fa-bolt', 'fa-cube','fa-cube', 'fa-leaf', 'fa-leaf', 'fa-bicycle', 'fa-bicycle', 'fa-bomb', 'fa-bomb'];
 
-let cards = ['fa-diamond', 'fa-diamond', 'fa-paper-plane-o', 'fa-paper-plane-o', 'fa-anchor', 'fa-anchor', 'fa-bolt', 'fa-bolt', 'fa-cube','fa-cube', 'fa-leaf', 'fa-leaf', 'fa-bicycle', 'fa-bicycle', 'fa-bomb', 'fa-bomb']
+const deck = document.querySelector('.deck');
+
+function init () {
+//create the board
+  for (let i=0; i<cards.length; i++) {
+    const card = document.createElement('li');
+    card.classList.add('card');
+    card.innerHTML = `<i class="fa ${cards[i]}"></i>`;
+    deck.appendChild(card);
+
+    //randomly shuffle board
+    /*shuffle(cards);*/
+
+     //loop to array to add click event Listener to each card
+    card.addEventListener('click', function() {
+        card.classList.toggle('open');
+        card.classList.toggle('show');//add class to any card clicked
+      });
+  };
+}
+
+init();
 
 
 /*
