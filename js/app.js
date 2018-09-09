@@ -4,21 +4,28 @@
 const deckOfCards = ['fa-diamond', 'fa-diamond', 'fa-paper-plane-o', 'fa-paper-plane-o', 'fa-anchor', 'fa-anchor', 'fa-bolt', 'fa-bolt', 'fa-cube','fa-cube', 'fa-leaf', 'fa-leaf', 'fa-bicycle', 'fa-bicycle', 'fa-bomb', 'fa-bomb'];
 
 const deck = document.querySelector('.deck');
-let card = [];
 let openCards = [];
 let matchedCards = [];
+let moves = 0;
+const moveCounter = document.querySelector('.moves');
+moveCounter.innerHTML = 0;
+
+const starsCounter = document.querySelector('.stars');
+starsCounter.innerHTML = `<li><i class="fa fa-star"></i></li>
+<li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li>`;
+
 
 //initialize game
 function init () {
+  //shuffle card before creating board
+  //shuffle(deckOfCards);
+
   //create the board and place cards on top
   for (let i=0; i<deckOfCards.length; i++) {
      const card = document.createElement('li');
      card.classList.add('card');
      card.innerHTML = `<i class="fa ${deckOfCards[i]}"></i>`;
      deck.appendChild(card);
-
-     //randomly shuffle board
-     /*shuffle(cards);*/
 
      //run clickedCard function to add click event listener
      clickedCard(card);
@@ -48,18 +55,20 @@ function clickedCard(card) {
           } else {
             //flip it back
             setTimeout ( function() {
-              current.card.classList.remove('open', 'show', 'disable');
-              first.card.classList.remove('open', 'show', 'disable');
+              currentCard.classList.remove('open', 'show', 'disable');
+              firstCard.classList.remove('open', 'show', 'disable');
             }, 1000);
             //reset the arrays
             openCards = [];
 
-            //create counter addMove();
+
             }
           } else {
             //flip card
             currentCard.classList.add('open', 'show','disable');
             openCards.push(this);
+            //start counter
+            startCounter();
           }
 
       });
@@ -75,6 +84,20 @@ function gameOver () {
     }
 }
 
+function startCounter () {
+  //each move means opening a set of two cards regardless of matched or not
+  moves++;
+  moveCounter.innerHTML = moves;
+
+  //
+  if (moves > 8) {
+    for (i=0; i <3; i++) {
+      if (i > 1) {
+        stars[i].style.visibility = 'collapse';
+      }
+    }
+  }
+}
 
 /*      //const clickTarget = event.target;
       if (clickTarget.classList.contains('card') &&
@@ -98,44 +121,8 @@ function gameOver () {
 
   }*/
 
-function addOpenCard () {
-  if (card.length === 2) {
-    if (card[0] === card[1]) {
-      console.log(card);
-      //  matchedOpenCards();
-        card.classList.add('match');
-      //  console.log('Matched');
-      } else if (openCard[0] != openCard[1]) {
-          console.log('Unmatched');
-          setTimeout(function() {
-
-          //  console.log(openCard[0]);
-          //  console.log(openCard[1]);
-            //classList.remove('show');
-
-            //console.log(openCard);
-          }, 1000);
-        }
-  }
-}
-
-//if the cards match
-function matchedOpenCards () {
-  card.classList.add('match'); //not working
-  card.classList.add('match');
-  card[0].classList.remove('show', 'open');
-  card[1].classList.add('show', 'open');
-  openCard.length = 0;
-}
-
-function matchedOpenCards () {
-
-}
-//if the cards do not match
-function unmatchedOpenCards () {
 
 
-}
 init();
 /*
  * Display the cards on the page
