@@ -7,11 +7,17 @@ const deck = document.querySelector('.deck');
 let openCards = [];
 let matchedCards = [];
 
+let clockOff = true;
+let time = 0;
+let clockId;
+let timer = 0;
+
 //shuffle card before creating board
 //shuffle(deckOfCards);
 
 //initialize game
 function init () {
+  resetClock();
   //create the board and place cards on top
   for (let i=0; i<deckOfCards.length; i++) {
      const card = document.createElement('li');
@@ -31,21 +37,18 @@ function clickedCard  (card) {
       const firstCard = openCards[0];
       //flip openCard
       if (openCards.length ===1 ) {
-
         card.classList.add('open','show');
         openCards.push(this);
           if (currentCard.innerHTML === firstCard.innerHTML) {
-
             currentCard.classList.add('match');
             firstCard.classList.add('match');
             //if match push the two match cards into this array
             matchedCards.push(currentCard, firstCard);
             //reset the arrays
             openCards = [];
-
             //check if game is finished
-            gameOver();
-
+            if (matchedCards.length === deckOfCards.length) {           gameOver();
+            }
           } else {
             //flip it back
             setTimeout ( function() {
@@ -54,32 +57,17 @@ function clickedCard  (card) {
             }, 1000);
             //reset the arrays
             openCards = [];
-
-            //add new moves
-
-
             }
           } else {
             //flip card
             currentCard.classList.add('open', 'show','disable');
             openCards.push(this);
             //start counter
+            startClock();
             addMove();
             rating();
-
           }
-
-      });
-  }
-
-function gameOver () {
-    //game is over when the cards that are stored in the matched array equal total amount of cards in the deck
-    if (matchedCards.length === deckOfCards.length) {
-        console.log("Game won")
-        stopClock ();
-        //showModal();
-        //toggleModal();
-    }
+  });
 }
 
 const moveCounter = document.querySelector('.moves');
@@ -92,12 +80,15 @@ function addMove () {
   moveCounter.innerHTML = moves;
 }
 
-let starList = document.querySelectorAll('.fa-star');
+function resetMoves() {
+  moves = 0;
+  document.querySelector('.moves').innerHTML = moves;
+}
 
+let starList = document.querySelectorAll('.fa-star');
 function rating () {
   // keeps track of moves and deducts a star when reaches 10 or 20 moves
-  if (moves === 2 || moves === 10) {
-
+  if (moves === 10 || moves === 20) {
     for (let i=0; i < starList.length; i++) {
         starList[0].remove();
     }
@@ -108,21 +99,37 @@ function rating () {
 }
 
 let starContainer = document.querySelector('.stars');
-
+let defaultStar = document.querySelector('.stars').children;
 function restartRating () {
+  //restart star rating to 3 stars
   let starContainer =  document.querySelector('.stars').children;
-  for (let i=0; i < 2; i++) {
-      starContainer[i].classList.add('fa', 'fa-star');
-  }
+  if ( moves < 2 ) {
+      return false;
+    } else if (moves === 2) {
+        for (let i=0; i < starList.length; i++) {
+          starContainer[0].classList.add('fa', 'fa-star');
+        }
+      } else if (moves > 2) {
+        //fix bug if more than 5 moves, it defaults to 2 stars when resetted
+          for (let i=0; i < starList.length; i++) {
+            starContainer[i].classList.add('fa', 'fa-star');
+          }
+        }
 }
+
+
+
+
 const restartBtn = document.querySelector('.restart');
 restartBtn.addEventListener('click', function () {
   deck.innerHTML = "";
+  stopClock(); //fix bug first time reset works, second time reset doesn't
   init();
-  moves = 0;
-  restartRating();
-  stopClock ();
+  restartRating(); //restart stars to 3
+
+  moves = 0; //restart moves to 0
   moveCounter.innerHTML = moves;
+
 
 
 });
@@ -150,79 +157,120 @@ function shuffle(array) {
     return array;
 }
 
-let clockOff = true;
-let time = 0;
-let clockID;
-let timer = 0;
-
-let minutes;
-let seconds;
 
 //create a timer
 function startClock() {
-let  time = setInterval(function() {
+  clockId = setInterval(() => {
     time++;
-    minutes = Math.floor(time/60);
-    seconds = time % 60;
-
     displayTime();
   }, 1000);
 }
 
-
-
 function displayTime() {
   let timer = document.querySelector('.time');
-  if (seconds < 10) {
-      timer.innerHTML=`${minutes}:0${seconds}`;
+  timer.innerHTML = time;
+  const minutes = Math.floor(time / 60);
+  const seconds = time % 60;
+  if (seconds < 10 ){
+    timer.innerHTML = `${minutes}:0${seconds}`;
   } else {
-      timer.innerHTML=`${minutes}:${seconds}`;
-    }
+    timer.innerHTML = `${minutes}:${seconds}`;
+  }
 }
 
 function stopClock () {
-  clearInterval(time);
+  clearInterval(clockId);
+}
+
+function resetClock () {
+  stopClock();
+  time = 0;
+  displayTime();
+}
+
+function gameOver () {
+    //game is over when the cards that are stored in the matched array equal total amount of cards in the deck
+    console.log("Game Over");
+    stopClock();
+    toggleModal();
+}
+
+
+document.querySelector('.modalBtn').addEventListener('click', toggleModal);
+document.querySelector('.modal_cancel').addEventListener('click', toggleModal);
+
+function showModal() {
+      const timeStat = document.querySelector('.modal_time');
+      const clockTime = document.querySelector('.time').innerHTML;
+      const movesStat = document.querySelector('.modal_moves');
+      const starsStat = document.querySelector('.modal_stars');
+
+      let finalTime = time;
+      let finalMove = moves;
+      let finalStar = []; //fix bug to display # of stars
+
+      if (finalMove >= 20 ) {
+        starsStat.innerHTML = '<i class="fa fa-star"></i>';
+      } else if (finalMove >= 10) {
+          starsStat.innerHTML = '<i class="fa fa-star"></i><i class="fa fa-star"></i>';
+      } else  { starsStat.innerHTML = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>';}
+
+      timeStat.innerHTML = `Time = ${finalTime}`;
+      movesStat.innerHTML = `Moves = ${finalMove}`;
+          //  console.log(finalTime); //final time
+            //  console.log(finalMove); //final moves
+              //      console.log(finalStar); //final star
+}
+
+const starsStat = document.querySelector('.modal_stars');
+function countStars() {
+  if (moves <= 10 ) {
+    starsStat.innerHTML = `<li class="rating1"><i class="fa fa-star"></i></li><li class="rating1"><i class="fa fa-star"></i></li><li class="rating1"><i class="fa fa-star"></i></li>`;
+    console.log(starsStat);
+  } else if (moves <=20) {
+      starsStat.innerHTML = `<li class="rating1"><i class="fa fa-star"></i></li><li class="rating1"><i class="fa fa-star"></i></li>`;
+  } else {
+    starsStat.innerHTML = `<li class="rating1"><i class="fa fa-star"></i></li>`;
+  }
 
 }
 
 
+function toggleModal() {
+  let modal = document.querySelector('.modal_body');
+  let modalOverlay = document.querySelector('.modal-overlay');
+  modal.classList.toggle('hide');
+  modalOverlay.classList.toggle ('hide');
+  showModal();
+}
 
-
+  document.querySelector('.modal_replay').addEventListener('click', replayGame);
   //restart game
-  function restartGame() {
-    var restartBtn = document.querySelector('.fa-repeat');
-    restartBtn.addEventListener('click', function (event) {
 
-        console.log(restartBtn);
-      });
-    /*    resetTime();
-    deck.innerHTML = "";
+function replayGame() {
+  restartGame();
+  toggleModal();
+}
 
-     //  init();
-      matchedCards = [];
-      moves = 0;
-      moveCounter.innerHTML = moves;
-      starsCounter.innerHTML = `<li><i class="fa fa-star"></i></li>
-      <li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li>`;
-    });*/
+function restartGame() {
+  restartRating();
+  resetClock();
+  restartRating();
+  resetMoves();
+}
+
+
+
+function resetCards() {
+  const cards = document.querySelectorAll('.deck li');
+  for (let card of cards) {
+    card.className = 'card';
   }
+}
 
-
-
-
-
-  /*function startTimer () {
-    let time = setInterval(countTimer, 1000);
-    var totalSecon
-    interval = setInterval (function() {
-      time++;
-      minute = Math.floor(time /60);
-      second = time - minute * 60;
-
-      displayTime();
-
-    },1000);
-  }*/
+function resetMatched() {
+    matchedCards = 0;
+}
 
 
 /*
