@@ -13,10 +13,11 @@ let clockId;
 let timer = 0;
 
 //shuffle card before creating board
-//shuffle(deckOfCards);
+shuffle(deckOfCards);
 
 //initialize game
 function init () {
+  resetMatched();
   resetClock();
   //create the board and place cards on top
   for (let i=0; i<deckOfCards.length; i++) {
@@ -59,13 +60,16 @@ function clickedCard  (card) {
             openCards = [];
             }
           } else {
-            //flip card
-            currentCard.classList.add('open', 'show','disable');
-            openCards.push(this);
-            //start counter
-            startClock();
-            addMove();
-            rating();
+              //flip card
+                currentCard.classList.add('open', 'show','disable');
+                openCards.push(this);
+                //start counter
+                if (clockOff) {
+                  startClock();
+                  clockOff = false;
+                }
+                addMove();
+                rating();
           }
   });
 }
@@ -80,10 +84,6 @@ function addMove () {
   moveCounter.innerHTML = moves;
 }
 
-function resetMoves() {
-  moves = 0;
-  document.querySelector('.moves').innerHTML = moves;
-}
 
 let starList = document.querySelectorAll('.fa-star');
 function rating () {
@@ -103,13 +103,13 @@ let defaultStar = document.querySelector('.stars').children;
 function restartRating () {
   //restart star rating to 3 stars
   let starContainer =  document.querySelector('.stars').children;
-  if ( moves < 2 ) {
+  if ( moves < 10 ) {
       return false;
-    } else if (moves === 2) {
+    } else if (moves === 10) {
         for (let i=0; i < starList.length; i++) {
           starContainer[0].classList.add('fa', 'fa-star');
         }
-      } else if (moves > 2) {
+      } else if (moves > 10) {
         //fix bug if more than 5 moves, it defaults to 2 stars when resetted
           for (let i=0; i < starList.length; i++) {
             starContainer[i].classList.add('fa', 'fa-star');
@@ -123,17 +123,17 @@ function restartRating () {
 const restartBtn = document.querySelector('.restart');
 restartBtn.addEventListener('click', function () {
   deck.innerHTML = "";
-  stopClock(); //fix bug first time reset works, second time reset doesn't
+  restartGame();
   init();
-  restartRating(); //restart stars to 3
-
-  moves = 0; //restart moves to 0
-  moveCounter.innerHTML = moves;
-
-
-
+  //resetMoves();
+  //moves = 0; //restart moves to 0
+  //moveCounter.innerHTML = moves;
 });
 
+function resetMoves() {
+  moves = 0;
+  document.querySelector('.moves').innerHTML = moves;
+}
 
 init();
 /*
@@ -185,6 +185,7 @@ function stopClock () {
 function resetClock () {
   stopClock();
   time = 0;
+  clockOff = true;
   displayTime();
 }
 
@@ -207,7 +208,7 @@ function showModal() {
 
       let finalTime = time;
       let finalMove = moves;
-      let finalStar = []; //fix bug to display # of stars
+      let finalStar = [];
 
       if (finalMove >= 20 ) {
         starsStat.innerHTML = '<i class="fa fa-star"></i>';
@@ -247,16 +248,28 @@ function toggleModal() {
   document.querySelector('.modal_replay').addEventListener('click', replayGame);
   //restart game
 
+  function resetCards() { //function turns down the cards to their original state.
+      const cards = document.querySelectorAll('.deck li');
+      for (let card of cards) {
+          card.className = 'card';
+      }
+  }
+
 function replayGame() {
   restartGame();
   toggleModal();
+  finalTime = 0;
 }
 
 function restartGame() {
   restartRating();
   resetClock();
+  stopClock();
+
   restartRating();
   resetMoves();
+  resetMatched();
+  resetCards();
 }
 
 
@@ -269,7 +282,7 @@ function resetCards() {
 }
 
 function resetMatched() {
-    matchedCards = 0;
+    matchedCards = [];
 }
 
 
