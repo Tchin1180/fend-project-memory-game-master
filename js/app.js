@@ -116,18 +116,13 @@ function rating() {
   }
 }
 
-function shuffleDeck () {
-  function shuffleDeck() { //function will make the array that passes the cards into the shuffle function
+//shuffle cards
+function shuffleDeck() {
     const cardsToShuffle = Array.from(document.querySelectorAll('.deck li'));
-    //variable stores all the li elements inside a div with the "deck" class.
-    //By using the Array.from() method, we create a new copied array from the array-like object, in this case, the NodeList we make.
     const shuffledCards = shuffle(cardsToShuffle);
-    //variable stores the result of passing my "array?" or NodeList into the shuffle function.
     for (card of shuffledCards) {
         deck.appendChild(card);
     }
-}
-shuffleDeck(); //When the game starts, this function happens first.
 }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
