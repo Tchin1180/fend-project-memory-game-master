@@ -2,19 +2,28 @@
 
 ## Table of Contents
 
-* [Instructions](#instructions)
+* [Introduction](#introduction)
+* [Files](#files)
+* [Credits](#credits)
 * [Contributing](#contributing)
 
-## Instructions
+## Introduction
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
+The Memory Game is a classic matching game where the player flips open 2 cards at a time. If the two cards matches, it stays open. If the two cards doesn't match, the cards flip back over. The game ends when all sets of cards are matched. There are totally of 8 pairs to be matched in order to win.
 
-To get started, open `js/app.js` and start building out the app's functionality
+The game will record the number of moves the play made, the time it took to win the game, and the star rating the player received.
 
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
+## Files
+
+There are three main files:
+1. index.html - contains all the HTML elements that create the card into the DOM.
+2. app.css - contains all the styling of the board and the cards as well as any animations displayed.
+3. app.js - contains all the logic to create the Memory game.
+
+## Credits
+
+Credits to Font Awesome, Udacity Starter Code, Shuffle function provided from http://stackoverflow.com/a/2450976, tutorials from Yahya Elharony https://www.youtube.com/channel/UCcWSbBe_s-T_gZRnqFbtyIA/videos
 
 ## Contributing
-
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
 
 For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
