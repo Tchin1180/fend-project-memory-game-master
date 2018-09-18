@@ -20,6 +20,12 @@ let clockOff = true;
 let time = 0;
 let clockId;
 let timer = 0;
+const moveCounter = document.querySelector('.moves');
+let moves = 0;
+let starList = document.querySelector('.stars');
+const aStar = `<li><i class="fa fa-star"></i></li>`;
+let starContainer = document.querySelector('.stars');
+let defaultStar = document.querySelector('.stars').children;
 
 //initialize game
 function init () {
@@ -98,10 +104,7 @@ function gameOver () {
     toggleModal();
 }
 
-
 // Add Moves
-const moveCounter = document.querySelector('.moves');
-let moves = 0;
 moveCounter.innerHTML = 0;
 
 function addMove () {
@@ -112,8 +115,6 @@ function addMove () {
 }
 
 // Add Rating
-let starList = document.querySelector('.stars');
-const aStar = `<li><i class="fa fa-star"></i></li>`;
 starList.innerHTML = aStar + aStar + aStar;
 
 function rating() {
@@ -182,9 +183,6 @@ function resetClock () {
 }
 
 //restart rating to 3 stars
-let starContainer = document.querySelector('.stars');
-let defaultStar = document.querySelector('.stars').children;
-
 function restartRating () {
   starList.innerHTML = aStar + aStar + aStar;
 }
